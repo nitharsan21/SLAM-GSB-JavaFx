@@ -8,6 +8,8 @@ package fr.gsb.rv.dr;
 import fr.gsb.rv.dr.entites.Visiteur;
 import fr.gsb.rv.dr.modeles.ModeleGsbRv;
 import fr.gsb.rv.dr.technique.Session;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.Optional;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -27,7 +29,9 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCombination;
+import javafx.scene.layout.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
@@ -43,7 +47,7 @@ public class Appli extends Application {
     
     
     @Override
-    public void start(Stage primaryStage) {
+    public void start(Stage primaryStage) throws FileNotFoundException {
         
     /*
      * Vue Acceuil Barre de menus de l'application.
@@ -75,8 +79,29 @@ public class Appli extends Application {
         // Add Menus to the MenuBar
         barreMenus.getMenus().addAll(menuFichier,menuRapport,menuPraticiens);
         
+    // create a input stream 
+        FileInputStream input = new FileInputStream("/home/developpeur/Images/lionking.jpg"); 
+
+        // create a image 
+        Image image = new Image(input); 
+
+        // create a background image 
+        BackgroundImage backgroundimage = new BackgroundImage(image,  
+                                         BackgroundRepeat.NO_REPEAT,  
+                                         BackgroundRepeat.NO_REPEAT,  
+                                         BackgroundPosition.CENTER,  
+                                            BackgroundSize.DEFAULT); 
+
+        // create Background 
+        Background background = new Background(backgroundimage); 
+
+        // set background 
+        //hbox.setBackground(background); 
+        
+        
         BorderPane root = new BorderPane();
         root.setTop(barreMenus);
+        root.setBackground(background);
         Scene scene = new Scene(root, 800, 700);
         
         primaryStage.setTitle("GSB-RV-DR");
@@ -89,6 +114,8 @@ public class Appli extends Application {
             alert.setTitle("Quitter");
             alert.setHeaderText("Demande de confirmation");
             alert.setContentText("Voulez-vous quitter l'application ?");
+            ButtonType alertOKType = new ButtonType("oui", ButtonBar.ButtonData.OK_DONE);
+             
             
             Optional<ButtonType> result = alert.showAndWait();
             if(result.get() == ButtonType.OK){
@@ -103,7 +130,7 @@ public class Appli extends Application {
             dialog.setHeaderText("Saisir vos données de connexion");
 
             // Set the button types.
-            ButtonType loginButtonType = new ButtonType("Login", ButtonBar.ButtonData.OK_DONE);
+            ButtonType loginButtonType = new ButtonType("Se connecter", ButtonBar.ButtonData.OK_DONE);
             dialog.getDialogPane().getButtonTypes().addAll(loginButtonType, ButtonType.CANCEL);
 
             // Create the username and password labels and fields.
@@ -144,9 +171,10 @@ public class Appli extends Application {
                 return null;
             });
             
-            
+            // la gestion de la session
             try{
                 Optional<Pair<String, String>> result = dialog.showAndWait();
+                // teste de la classe Connexion BD et de la methode seConnecter()
                 Session.ouvrir(ModeleGsbRv.seConnecter((result.get()).getKey(),(result.get()).getValue()));
                 
                 if(Session.getSession().getLeVisiteur() != null){
@@ -163,11 +191,12 @@ public class Appli extends Application {
                 else {
                     int usernameattempts = 1;
                     int tentative = 2;
-                    while (Session.getSession().getLeVisiteur() == null && usernameattempts < 3) {
+                    while (Session.getSession().getLeVisiteur() == null && usernameattempts < 3 ) {
                         Alert alert = new Alert(Alert.AlertType.INFORMATION);
                         alert.setContentText("Saisir Incorrect. Vous avez "+ tentative +" tentative restante");
                         alert.showAndWait();
                         Optional<Pair<String, String>> result1 = dialog.showAndWait();
+                        System.out.println(result1);
                         Session.ouvrir(ModeleGsbRv.seConnecter((result1.get()).getKey(),(result1.get()).getValue()));
                         usernameattempts++;
                         tentative--;
@@ -216,7 +245,16 @@ public class Appli extends Application {
                     primaryStage.setScene(scene1);
                 }
             }
-        });    
+        });
+        
+        consulterItem.setOnAction((ActionEvent event) ->{
+            System.out.println("'[Rapports]'"+Session.getSession().getLeVisiteur().getPrenom()+' '+Session.getSession().getLeVisiteur().getNom() );
+        });
+        
+        hesitantsItem.setOnAction((ActionEvent event) ->{
+            System.out.println("'[Praticiens]'"+Session.getSession().getLeVisiteur().getPrenom()+' '+Session.getSession().getLeVisiteur().getNom() );
+        });
+        
         
        
         

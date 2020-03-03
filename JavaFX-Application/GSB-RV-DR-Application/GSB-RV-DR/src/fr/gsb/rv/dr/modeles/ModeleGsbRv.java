@@ -14,7 +14,7 @@ public class ModeleGsbRv {
         
         Connection connexion = ConnexionBD.getConnexion() ;
         
-        String requete = "select vis_nom "
+        String requete = "select vis_nom, vis_prenom "
                 + "from Visiteur "
                 + "where vis_matricule = ?" ;
         
@@ -26,6 +26,8 @@ public class ModeleGsbRv {
                 Visiteur visiteur = new Visiteur() ;
                 visiteur.setMatricule( matricule );
                 visiteur.setNom( resultat.getString( "vis_nom" ) ) ;
+                visiteur.setPrenom(resultat.getString( "vis_prenom" ) ) ;
+                
                 
                 requetePreparee.close() ;
                 return visiteur ;
