@@ -12,13 +12,14 @@ public class ConnexionBD {
     
     private static Connection connexion = null ;
     
-    private ConnexionBD() throws ConnexionException {
+    private ConnexionBD() throws ConnexionException{
         try {
             Class.forName( "com.mysql.jdbc.Driver" ) ;
             connexion = (Connection) DriverManager.getConnection(dbURL, user, password) ;
         }
         catch( Exception e ){
             throw new ConnexionException() ;
+            
         }
     }
     

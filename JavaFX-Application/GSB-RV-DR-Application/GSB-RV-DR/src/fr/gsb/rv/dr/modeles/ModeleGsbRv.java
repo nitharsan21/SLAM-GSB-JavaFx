@@ -22,6 +22,7 @@ public class ModeleGsbRv {
             PreparedStatement requetePreparee = (PreparedStatement) connexion.prepareStatement( requete ) ;
             requetePreparee.setString( 1 , matricule );
             ResultSet resultat = requetePreparee.executeQuery() ;
+            
             if( resultat.next() ){
                 Visiteur visiteur = new Visiteur() ;
                 visiteur.setMatricule( matricule );

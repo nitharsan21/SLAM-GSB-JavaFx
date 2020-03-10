@@ -8,6 +8,7 @@ package fr.gsb.rv.dr;
 import fr.gsb.rv.dr.entites.Visiteur;
 import fr.gsb.rv.dr.modeles.ModeleGsbRv;
 import fr.gsb.rv.dr.technique.Session;
+import fr.gsb.rv.dr.vue.VueConnexion;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.Optional;
@@ -71,6 +72,7 @@ public class Appli extends Application {
         menuRapport.getItems().add(consulterItem);
         menuRapport.setDisable(true);
         
+        
         //Menu Praticiens
         Menu menuPraticiens = new Menu("Praticiens");
         MenuItem hesitantsItem = new MenuItem("Hésitants");
@@ -78,10 +80,9 @@ public class Appli extends Application {
         menuPraticiens.setDisable(true);
         // Add Menus to the MenuBar
         barreMenus.getMenus().addAll(menuFichier,menuRapport,menuPraticiens);
-        
     // create a input stream 
         FileInputStream input = new FileInputStream("/home/developpeur/Images/lionking.jpg"); 
-
+        
         // create a image 
         Image image = new Image(input); 
 
@@ -94,14 +95,28 @@ public class Appli extends Application {
 
         // create Background 
         Background background = new Background(backgroundimage); 
+        
+        FileInputStream input2 = new FileInputStream("/home/developpeur/Images/logo.png"); 
+        // create a image 
+        Image logo = new Image(input2);
+        // create a background image 
+        BackgroundImage backgroundlogo = new BackgroundImage(logo,  
+                                         BackgroundRepeat.NO_REPEAT,  
+                                         BackgroundRepeat.NO_REPEAT,  
+                                         BackgroundPosition.CENTER,  
+                                            BackgroundSize.DEFAULT);
+        
 
+        // create Background 
+        Background background1 = new Background(backgroundlogo);
         // set background 
         //hbox.setBackground(background); 
         
         
+        
         BorderPane root = new BorderPane();
         root.setTop(barreMenus);
-        root.setBackground(background);
+        root.setBackground(background1);
         Scene scene = new Scene(root, 800, 700);
         
         primaryStage.setTitle("GSB-RV-DR");
@@ -125,89 +140,16 @@ public class Appli extends Application {
         
         // function de l'item seConnecter
         connectItem.setOnAction((ActionEvent event) -> {
-            Dialog<Pair<String, String>> dialog = new Dialog<>();
-            dialog.setTitle("Authentification");
-            dialog.setHeaderText("Saisir vos données de connexion");
-
-            // Set the button types.
-            ButtonType loginButtonType = new ButtonType("Se connecter", ButtonBar.ButtonData.OK_DONE);
-            dialog.getDialogPane().getButtonTypes().addAll(loginButtonType, ButtonType.CANCEL);
-
-            // Create the username and password labels and fields.
-            GridPane grid = new GridPane();
-            grid.setHgap(10);
-            grid.setVgap(10);
-            grid.setPadding(new Insets(20, 150, 10, 10));
-
-            TextField username = new TextField();
-            username.setPromptText("Username");
-            PasswordField password = new PasswordField();
-            password.setPromptText("Password");
-
-            grid.add(new Label("Username:"), 0, 0);
-            grid.add(username, 1, 0);
-            grid.add(new Label("Password:"), 0, 1);
-            grid.add(password, 1, 1);
-
-            // Enable/Disable login button depending on whether a username was entered.
-            Node loginButton = dialog.getDialogPane().lookupButton(loginButtonType);
-            loginButton.setDisable(true);
-
-            // Do some validation (using the Java 8 lambda syntax).
-            username.textProperty().addListener((observable, oldValue, newValue) -> {
-                loginButton.setDisable(newValue.trim().isEmpty());
-            });
-
-            dialog.getDialogPane().setContent(grid);
-
-            // Request focus on the username field by default.
-            Platform.runLater(() -> username.requestFocus());
-
-            // Convert the result to a username-password-pair when the login button is clicked.
-            dialog.setResultConverter(dialogButton -> {
-                if (dialogButton == loginButtonType) {
-                    return new Pair<>(username.getText(), password.getText());
-                }
-                return null;
-            });
             
             // la gestion de la session
             try{
-                Optional<Pair<String, String>> result = dialog.showAndWait();
+                VueConnexion vue = new VueConnexion();
+                Optional<Pair<String, String>> result = vue.getDialog().showAndWait();
                 // teste de la classe Connexion BD et de la methode seConnecter()
-                Session.ouvrir(ModeleGsbRv.seConnecter((result.get()).getKey(),(result.get()).getValue()));
+                if(result.isPresent()){
+                    Session.ouvrir(ModeleGsbRv.seConnecter((result.get()).getKey(),(result.get()).getValue()));
                 
-                if(Session.getSession().getLeVisiteur() != null){
-                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setHeaderText("Vous vous etes Connecter avec Succés");
-                    alert.setContentText("Bonjour " + Session.getSession().getLeVisiteur().getNom());
-                    alert.showAndWait();
-                    deconnectItem.setDisable(false);
-                    connectItem.setDisable(true);
-                    menuRapport.setDisable(false);
-                    menuPraticiens.setDisable(false);
-                }
-
-                else {
-                    int usernameattempts = 1;
-                    int tentative = 2;
-                    while (Session.getSession().getLeVisiteur() == null && usernameattempts < 3 ) {
-                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                        alert.setContentText("Saisir Incorrect. Vous avez "+ tentative +" tentative restante");
-                        alert.showAndWait();
-                        Optional<Pair<String, String>> result1 = dialog.showAndWait();
-                        System.out.println(result1);
-                        Session.ouvrir(ModeleGsbRv.seConnecter((result1.get()).getKey(),(result1.get()).getValue()));
-                        usernameattempts++;
-                        tentative--;
-                    }
-                    if(Session.getSession().getLeVisiteur() == null){
-                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                        alert.setContentText("Vous avez dépassé la tentative de connexion !!!");
-                        alert.showAndWait();
-                        System.exit(0);
-                    }
-                    else{
+                    if(Session.getSession().getLeVisiteur() != null){
                         Alert alert = new Alert(Alert.AlertType.INFORMATION);
                         alert.setHeaderText("Vous vous etes Connecter avec Succés");
                         alert.setContentText("Bonjour " + Session.getSession().getLeVisiteur().getNom());
@@ -216,6 +158,43 @@ public class Appli extends Application {
                         connectItem.setDisable(true);
                         menuRapport.setDisable(false);
                         menuPraticiens.setDisable(false);
+                        System.out.println("Session Ouvert:"+Session.getSession().getLeVisiteur().toString());
+                        root.setBackground(background);
+                        
+                        
+                        
+                    }
+
+                    else {
+                        int usernameattempts = 1;
+                        int tentative = 2;
+                        while (Session.getSession().getLeVisiteur() == null && usernameattempts < 3 ) {
+                            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                            alert.setContentText("Saisir Incorrect. Vous avez "+ tentative +" tentative restante");
+                            alert.showAndWait();
+                            Optional<Pair<String, String>> result1 = vue.getDialog().showAndWait();
+                            System.out.println(result1);
+                            Session.ouvrir(ModeleGsbRv.seConnecter((result1.get()).getKey(),(result1.get()).getValue()));
+                            usernameattempts++;
+                            tentative--;
+                        }
+                        if(Session.getSession().getLeVisiteur() == null){
+                            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                            alert.setContentText("Vous avez dépassé la tentative de connexion !!!");
+                            alert.showAndWait();
+                            System.exit(0);
+                        }
+                        else{
+                            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                            alert.setHeaderText("Vous vous etes Connecter avec Succés");
+                            alert.setContentText("Bonjour " + Session.getSession().getLeVisiteur().getNom());
+                            alert.showAndWait();
+                            deconnectItem.setDisable(false);
+                            connectItem.setDisable(true);
+                            menuRapport.setDisable(false);
+                            menuPraticiens.setDisable(false);
+                            System.out.println("Session Ouvert:"+Session.getSession().getLeVisiteur().toString());
+                        }
                     }
                 }
             }
@@ -239,13 +218,21 @@ public class Appli extends Application {
                     deconnectItem.setDisable(true);
                     menuRapport.setDisable(true);
                     menuPraticiens.setDisable(true);
-                    BorderPane root1 = new BorderPane();
-                    root1.setTop(barreMenus);
-                    Scene scene1 = new Scene(root1, 800, 700);
-                    primaryStage.setScene(scene1);
+                    root.setBackground(background1);
+                    root.setTop(barreMenus);
+                    primaryStage.setScene(scene);
+                    primaryStage.show();
+                    System.out.println("Session Fermer");
                 }
             }
         });
+        
+        
+        
+        
+        
+        
+        
         
         consulterItem.setOnAction((ActionEvent event) ->{
             System.out.println("'[Rapports]'"+Session.getSession().getLeVisiteur().getPrenom()+' '+Session.getSession().getLeVisiteur().getNom() );
