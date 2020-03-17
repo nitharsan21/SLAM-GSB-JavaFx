@@ -9,11 +9,13 @@ import fr.gsb.rv.dr.entites.Visiteur;
 import fr.gsb.rv.dr.modeles.ModeleGsbRv;
 import fr.gsb.rv.dr.technique.Session;
 import fr.gsb.rv.dr.vue.VueConnexion;
+import fr.gsb.rv.panneau.*;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.Optional;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -52,7 +54,33 @@ public class Appli extends Application {
         
     /*
      * Vue Acceuil Barre de menus de l'application.
-     */    
+     */ 
+        StackPane stackPane = new StackPane();
+        PanneauAccueil accueil = new PanneauAccueil();
+        PanneauRapports rapport = new PanneauRapports();
+        PanneauPraticiens praticien = new PanneauPraticiens();
+       
+    
+        stackPane.getChildren().addAll(accueil.getVueAccueil(),rapport.getVueRapportl(),praticien.getVuePraticien());
+        
+        stackPane.setPrefSize(300, 150);
+        //stackPane.setStyle("-fx-background-color: Gainsboro;-fx-border-color: blue;");
+        ObservableList<Node> childs = stackPane.getChildren();
+        Node topNode = childs.get(childs.size()-1);
+
+        // This node will be brought to the front
+        Node newTopNode = childs.get(childs.size()-3);
+
+        topNode.setVisible(false);
+        topNode.toBack();
+
+        newTopNode.setVisible(true);
+       
+        
+        //
+        //stackPane.setPrefSize(300, 150);
+        //stackPane.setStyle("-fx-background-color: Gainsboro;-fx-border-color: blue;");
+        
         //Creation de la barre d menus 
         MenuBar barreMenus = new MenuBar();
         
@@ -110,12 +138,13 @@ public class Appli extends Application {
         // create Background 
         Background background1 = new Background(backgroundlogo);
         // set background 
-        //hbox.setBackground(background); 
+       
         
         
         
         BorderPane root = new BorderPane();
         root.setTop(barreMenus);
+        root.setCenter(stackPane);
         root.setBackground(background1);
         Scene scene = new Scene(root, 800, 700);
         
@@ -159,7 +188,9 @@ public class Appli extends Application {
                         menuRapport.setDisable(false);
                         menuPraticiens.setDisable(false);
                         System.out.println("Session Ouvert:"+Session.getSession().getLeVisiteur().toString());
+                        //Panneau Accueil
                         root.setBackground(background);
+                        root.setCenter(accueil.getVueAccueil());
                         
                         
                         
@@ -194,6 +225,10 @@ public class Appli extends Application {
                             menuRapport.setDisable(false);
                             menuPraticiens.setDisable(false);
                             System.out.println("Session Ouvert:"+Session.getSession().getLeVisiteur().toString());
+                            
+                            //Panneau Accueil
+                            root.setBackground(background);
+                            root.setCenter(accueil.getVueAccueil());
                         }
                     }
                 }
@@ -220,32 +255,50 @@ public class Appli extends Application {
                     menuPraticiens.setDisable(true);
                     root.setBackground(background1);
                     root.setTop(barreMenus);
+                    root.setCenter(accueil.getVueAccueil());
                     primaryStage.setScene(scene);
                     primaryStage.show();
                     System.out.println("Session Fermer");
+                    
                 }
             }
         });
         
         
-        
-        
-        
-        
-        
-        
+        //Navigation
+      
         consulterItem.setOnAction((ActionEvent event) ->{
+            //root.setCenter(rapport.getVueRapportl());
+            changeTop(stackPane);
+
             System.out.println("'[Rapports]'"+Session.getSession().getLeVisiteur().getPrenom()+' '+Session.getSession().getLeVisiteur().getNom() );
         });
         
         hesitantsItem.setOnAction((ActionEvent event) ->{
-            System.out.println("'[Praticiens]'"+Session.getSession().getLeVisiteur().getPrenom()+' '+Session.getSession().getLeVisiteur().getNom() );
+           //root.setCenter(praticien.getVuePraticien());
+           changeTop(stackPane);
+           System.out.println("'[Praticiens]'"+Session.getSession().getLeVisiteur().getPrenom()+' '+Session.getSession().getLeVisiteur().getNom() );
         });
-        
-        
        
         
     }
+    
+    private void changeTop(StackPane stackPane) {
+       ObservableList<Node> childs = stackPane.getChildren();
+ 
+       if (childs.size() > 1) {
+           //
+           Node topNode = childs.get(childs.size()-1);
+          
+           // This node will be brought to the front
+           Node newTopNode = childs.get(childs.size()-2);
+                  
+           topNode.setVisible(false);
+           topNode.toBack();
+          
+           newTopNode.setVisible(true);
+       }
+   }
 
     /**
      * @param args the command line arguments

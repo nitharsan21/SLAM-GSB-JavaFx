@@ -10,30 +10,47 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
-
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.*;
 /**
  *
  * @author developpeur
  */
 public class PanneauAccueil {
     private GridPane vueAccueil;
+    private VBox vbox;
 
     public PanneauAccueil() {
-        GridPane grid = new GridPane();
-        grid.setHgap(10);
-        grid.setVgap(10);
-        grid.setPadding(new Insets(20, 150, 10, 10));
+        vueAccueil = new GridPane();
+        vueAccueil.setHgap(10);
+        vueAccueil.setVgap(10);
+        vueAccueil.setPadding(new Insets(20, 150, 10, 10));
 
-        TextField username = new TextField();
-        username.setPromptText("Username");
-        PasswordField password = new PasswordField();
-        password.setPromptText("Password");
-
-        grid.add(new Label("Username:"), 0, 0);
-        grid.add(username, 1, 0);
-        grid.add(new Label("Password:"), 0, 1);
-        grid.add(password, 1, 1);
+        vbox = new VBox();
+        vbox.setPadding(new Insets(15, 12, 15, 12));
+        vbox.setSpacing(10);
+        vbox.setStyle("-fx-background-color: white;");
+        
+        Text category = new Text("Accueil");
+        category.setFont(Font.font("Arial", FontWeight.BOLD, 20));
+        vbox.getChildren().add(category);
+        vueAccueil.add(vbox, 1, 0); 
+        
+        //vbox.getChildren().add(b);
+        
+        //vueAccueil.add(vbox, 0, 0);
     }
+
+    public VBox getVbox() {
+        return vbox;
+    }
+
+    public GridPane getVueAccueil() {
+        return vueAccueil;
+    }
+    
+    
     
     
     
