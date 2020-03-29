@@ -6,20 +6,35 @@
 package fr.gsb.rv.panneau;
 
 import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.*;
 /**
  *
  * @author developpeur
  */
-public class PanneauAccueil {
+public class PanneauAccueil extends Pane {
     private GridPane vueAccueil;
     private VBox vbox;
+/*
+    public PanneauAccueil(GridPane vueAccueil, VBox vbox) {
+        this.vueAccueil = vueAccueil;
+        this.vbox = vbox;
+    }
+
+    public PanneauAccueil(GridPane vueAccueil, VBox vbox, Node... children) {
+        super(children);
+        this.vueAccueil = vueAccueil;
+        this.vbox = vbox;
+    }
+    */
+    
 
     public PanneauAccueil() {
         vueAccueil = new GridPane();
