@@ -55,6 +55,7 @@ public class Appli extends Application {
     PanneauRapports rapport = new PanneauRapports();
     PanneauPraticiens praticien = new PanneauPraticiens();
     
+    
     GridPane vueaccueil = accueil.getVueAccueil();
     GridPane vuerapport = rapport.getVueRapportl();
     GridPane vuepraticien = praticien.getVuePraticien();
@@ -68,9 +69,8 @@ public class Appli extends Application {
      * Vue Acceuil Barre de menus de l'application.
      */ 
         
-    
-    
-    
+        
+        
         //StackPane stackPane = new StackPane();
         stackPane.getChildren().addAll(vuepraticien,vuerapport,vueaccueil);
         stackPane.setPrefSize(300, 150);
@@ -214,6 +214,7 @@ public class Appli extends Application {
                         menuPraticiens.setDisable(false);
                         System.out.println("Session Ouvert:"+Session.getSession().getLeVisiteur().toString());
                         //Panneau Accueil
+                        praticien.setCritereTri(PanneauPraticiens.CRITERE_COEF_CONFIANCE);
                         root.setBackground(background);
                         root.setCenter(stackPane);
                         changeTop(vueaccueil);
@@ -254,6 +255,7 @@ public class Appli extends Application {
                             System.out.println("Session Ouvert:"+Session.getSession().getLeVisiteur().toString());
                             
                             //Panneau Accueil
+                            praticien.setCritereTri(PanneauPraticiens.CRITERE_COEF_CONFIANCE);
                             root.setBackground(background);
                             root.setCenter(stackPane);
                             changeTop(vueaccueil);
@@ -282,6 +284,7 @@ public class Appli extends Application {
                     deconnectItem.setDisable(true);
                     menuRapport.setDisable(true);
                     menuPraticiens.setDisable(true);
+                    praticien.setCritereTri(PanneauPraticiens.CRITERE_COEF_CONFIANCE);
                     root.getCenter().setVisible(false);
                     root.setBackground(background1);
                     root.setTop(barreMenus);
@@ -310,6 +313,7 @@ public class Appli extends Application {
            //root.setCenter(praticien.getVuePraticien());
            //changeTop(stackPane);
            //stackPane.getChildren().get(stackPane.getChildren().size()-1);
+           praticien.rafraichir();
            changeTop(vuepraticien);
            
            System.out.println("'[Praticiens]'"+Session.getSession().getLeVisiteur().getPrenom()+' '+Session.getSession().getLeVisiteur().getNom() );
