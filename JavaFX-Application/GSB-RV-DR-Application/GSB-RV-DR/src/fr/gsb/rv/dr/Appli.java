@@ -9,10 +9,12 @@ import fr.gsb.rv.dr.entites.Praticien;
 import fr.gsb.rv.dr.entites.Visiteur;
 import fr.gsb.rv.dr.modeles.ModeleGsbRv;
 import fr.gsb.rv.dr.technique.Session;
+import fr.gsb.rv.dr.utilitaires.*;
 import fr.gsb.rv.dr.vue.VueConnexion;
 import fr.gsb.rv.panneau.*;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import javafx.application.Application;
@@ -173,7 +175,30 @@ public class Appli extends Application {
                 // teste de la classe Connexion BD et de la methode seConnecter()
                 if(result.isPresent()){
                     Session.ouvrir(ModeleGsbRv.seConnecter((result.get()).getKey(),(result.get()).getValue()));
+                    
+                    System.out.println("test list Praticiens");
+                    
                     List<Praticien> praticiens = ModeleGsbRv.getPraticiensHesitants();
+                    for(Praticien i : praticiens){
+                        System.out.println(i);
+                    }
+                    
+                    System.out.println("test ComparateurCoefConfiance ");
+                    Collections.sort(praticiens, new ComparateurCoefConfiance());
+                    for(Praticien i : praticiens){
+                        System.out.println(i);
+                    }
+                    
+                    System.out.println("test ComparateurCoefNotoriete ");
+                    Collections.sort(praticiens, new ComparateurCoefNotoriete());
+                    Collections.reverse(praticiens);
+                    for(Praticien i : praticiens){
+                        System.out.println(i);
+                    }
+                    
+                    System.out.println("test ComparateurDateVisite ");
+                    Collections.sort(praticiens, new ComparateurDateVisite());
+                    Collections.reverse(praticiens);
                     for(Praticien i : praticiens){
                         System.out.println(i);
                     }
