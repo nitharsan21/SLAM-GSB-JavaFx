@@ -5,6 +5,7 @@
  */
 package fr.gsb.rv.dr;
 
+import fr.gsb.rv.dr.entites.Praticien;
 import fr.gsb.rv.dr.entites.Visiteur;
 import fr.gsb.rv.dr.modeles.ModeleGsbRv;
 import fr.gsb.rv.dr.technique.Session;
@@ -12,6 +13,7 @@ import fr.gsb.rv.dr.vue.VueConnexion;
 import fr.gsb.rv.panneau.*;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.List;
 import java.util.Optional;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -63,6 +65,10 @@ public class Appli extends Application {
     /*
      * Vue Acceuil Barre de menus de l'application.
      */ 
+        
+    
+    
+    
         //StackPane stackPane = new StackPane();
         stackPane.getChildren().addAll(vuepraticien,vuerapport,vueaccueil);
         stackPane.setPrefSize(300, 150);
@@ -167,8 +173,12 @@ public class Appli extends Application {
                 // teste de la classe Connexion BD et de la methode seConnecter()
                 if(result.isPresent()){
                     Session.ouvrir(ModeleGsbRv.seConnecter((result.get()).getKey(),(result.get()).getValue()));
-                
-                    if(Session.getSession().getLeVisiteur() != null){
+                    List<Praticien> praticiens = ModeleGsbRv.getPraticiensHesitants();
+                    for(Praticien i : praticiens){
+                        System.out.println(i);
+                    }
+                    
+                    if(Session.getSession().getLeVisiteur() != null ){
                         Alert alert = new Alert(Alert.AlertType.INFORMATION);
                         alert.setHeaderText("Vous êtes Connecter avec Succés");
                         alert.setContentText("Bonjour " + Session.getSession().getLeVisiteur().getNom());
