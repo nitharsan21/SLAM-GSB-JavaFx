@@ -94,14 +94,19 @@ public class PanneauPraticiens extends Pane {
         TableColumn<Praticien,String> colNumero = new TableColumn<Praticien,String>("Numéro");
         colNumero.setCellValueFactory(new PropertyValueFactory<>("numero"));
         tabPraticiens.getColumns().add(colNumero);
+        ////colNumero.setStyle("-fx-pref-width: 8em");
         
         TableColumn<Praticien,String> colNom = new TableColumn<Praticien,String>("Nom");
         colNom.setCellValueFactory(new PropertyValueFactory<>("nom"));
         tabPraticiens.getColumns().add(colNom);
+        //colNom.setStyle("-fx-pref-width: 8em");
         
         TableColumn<Praticien,String> colVille = new TableColumn<Praticien,String>("Ville");
         colVille.setCellValueFactory(new PropertyValueFactory<>("ville"));
         tabPraticiens.getColumns().add(colVille);
+        //colVille.setStyle("-fx-pref-width: 8em");
+
+        tabPraticiens.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         
         vbox.getChildren().add(tabPraticiens);
         rafraichir();
