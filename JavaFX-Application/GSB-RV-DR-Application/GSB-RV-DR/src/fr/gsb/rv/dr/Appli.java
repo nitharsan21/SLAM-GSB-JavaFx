@@ -6,6 +6,7 @@
 package fr.gsb.rv.dr;
 
 import fr.gsb.rv.dr.entites.Praticien;
+import fr.gsb.rv.dr.entites.RapportVisite;
 import fr.gsb.rv.dr.entites.Visiteur;
 import fr.gsb.rv.dr.modeles.ModeleGsbRv;
 import fr.gsb.rv.dr.technique.Session;
@@ -176,6 +177,7 @@ public class Appli extends Application {
                 if(result.isPresent()){
                     Session.ouvrir(ModeleGsbRv.seConnecter((result.get()).getKey(),(result.get()).getValue()));
                     
+                    System.out.println();
                     System.out.println("test list Praticiens");
                     
                     List<Praticien> praticiens = ModeleGsbRv.getPraticiensHesitants();
@@ -183,12 +185,14 @@ public class Appli extends Application {
                         System.out.println(i);
                     }
                     
+                    System.out.println();
                     System.out.println("test ComparateurCoefConfiance ");
                     Collections.sort(praticiens, new ComparateurCoefConfiance());
                     for(Praticien i : praticiens){
                         System.out.println(i);
                     }
                     
+                    System.out.println();
                     System.out.println("test ComparateurCoefNotoriete ");
                     Collections.sort(praticiens, new ComparateurCoefNotoriete());
                     Collections.reverse(praticiens);
@@ -196,12 +200,41 @@ public class Appli extends Application {
                         System.out.println(i);
                     }
                     
+                    System.out.println();
                     System.out.println("test ComparateurDateVisite ");
                     Collections.sort(praticiens, new ComparateurDateVisite());
                     Collections.reverse(praticiens);
                     for(Praticien i : praticiens){
                         System.out.println(i);
                     }
+                    
+                    System.out.println();
+                    System.out.println("test getVisiteurs() ");
+                    List<Visiteur> testVisiteurs = ModeleGsbRv.getVisiteurs();
+                    for(Visiteur i : testVisiteurs){
+                        System.out.println(i);
+                    }
+                    
+                    System.out.println();
+                    System.out.println("test getRapportsVisite() ");
+                    List<RapportVisite> testRv = ModeleGsbRv.getRapportsVisite("a131",5,2018);
+                    for(RapportVisite i : testRv){
+                        System.out.println(i);
+                    }
+                    
+                    
+                    
+                    System.out.println();
+                    System.out.println("test setRapportVisiteLu() ");
+                    ModeleGsbRv.setRapportVisiteLu("a131", 5);
+                    testRv = ModeleGsbRv.getRapportsVisite("a131",5,2018);
+                    for(RapportVisite i : testRv){
+                        System.out.println(i);
+                    }
+                    
+                    
+                    
+                    
                     
                     if(Session.getSession().getLeVisiteur() != null ){
                         Alert alert = new Alert(Alert.AlertType.INFORMATION);
