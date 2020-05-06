@@ -248,7 +248,7 @@ public class ModeleGsbRv {
         
         Connection connexion = ConnexionBD.getConnexion() ;
         
-        String requete = "select p.pra_num,p.pra_nom,p.pra_ville,p.pra_coefnotoriete,max(r.rap_date_visite) as date,r.rap_coef_confiance " 
+        String requete = "select p.pra_num,p.pra_nom,p.pra_prenom,p.pra_ville,p.pra_coefnotoriete,max(r.rap_date_visite) as date,r.rap_coef_confiance " 
                 + "from Praticien p "
                 + "inner join RapportVisite r "
                 + "on p.pra_num = r.pra_num "
@@ -266,6 +266,7 @@ public class ModeleGsbRv {
                 Praticien praticien = new Praticien() ;
                 praticien.setNumero(resultat.getString("pra_num") );
                 praticien.setNom(resultat.getString("pra_nom") );
+                praticien.setPrenom(resultat.getString("pra_prenom"));
                 praticien.setVille(resultat.getString("pra_ville") );
                 praticien.setCoefNotoriete(Float.valueOf(resultat.getString("pra_coefnotoriete")) );                
                 praticien.setDateDernierVisite(Date.valueOf(resultat.getString("date")).toLocalDate());

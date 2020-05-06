@@ -223,14 +223,14 @@ public class Appli extends Application {
                     }
                     
                     
-                    
+                    /*
                     System.out.println();
                     System.out.println("test setRapportVisiteLu() ");
                     ModeleGsbRv.setRapportVisiteLu("a131", 5);
                     testRv = ModeleGsbRv.getRapportsVisite("a131",5,2018);
                     for(RapportVisite i : testRv){
                         System.out.println(i);
-                    }
+                    }*/
                     
                     
                     
